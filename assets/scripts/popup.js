@@ -1295,8 +1295,7 @@ let Popup = (function() {
      * Initializer of this object. In this method, periodic bot to refresh table will be initialized.
      */
     const init = function(tabId, params) {
-        let userInfo = JSON.parse(localStorage._user);
-        
+        let userInfo = getUser();
 
         if (_background.get().domain == "amazon.com.au") {
             $("#category").children("option.category-books").remove();
@@ -1311,6 +1310,21 @@ let Popup = (function() {
         if (!params || !params.layout) {
             if (!isAuthorized()) {
                 goTo("login");
+                $(document)
+                .on("keypress", "#login-email", (event) => {
+                    if (event.which == 13 || event.keyCode == 13) {
+                        if (event.target.value.trim() !== "") {
+                            $("#login-password").focus();
+                        }
+                    }
+                })
+                .on("keypress", "#login-password", (event) => {
+                    if (event.which == 13 || event.keyCode == 13) {
+                        if ($("#login-email").val().trim() !== "" && $("#login-password").val().trim() != "") {
+                            $("#login-submit").click();
+                        }
+                    }
+                })
             } else {
                 goTo("incorrect-layout");
                 $(document).on("click", "#open-eBooks-url", (event) => {
