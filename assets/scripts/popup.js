@@ -1280,17 +1280,24 @@ let Popup = (function() {
         }
     }
 
+    const isAuthorized = () => {
+        let userInfo = getUser();
+        let token = JSON.parse(localStorage._token || "null");
+
+        return (
+            token &&
+            userInfo.membership_tier &&
+            userInfo.membership_tier !== "e"
+        );
+    }
+
     /**
      * Initializer of this object. In this method, periodic bot to refresh table will be initialized.
      */
     const init = function(tabId, params) {
-        if (!params || !params.layout) {
-            goTo("incorrect-layout");
-            $(document).on("click", "#open-eBooks-url", (event) => {
-                chrome.tabs.create({url: getSearchUrl().https});
-            })
-            return false;
-        }
+        let userInfo = JSON.parse(localStorage._user);
+        
+
         if (_background.get().domain == "amazon.com.au") {
             $("#category").children("option.category-books").remove();
             _background.set({
@@ -1300,6 +1307,18 @@ let Popup = (function() {
 
         // updateTable();
         initEvents();
+
+        if (!params || !params.layout) {
+            if (!isAuthorized()) {
+                goTo("login");
+            } else {
+                goTo("incorrect-layout");
+                $(document).on("click", "#open-eBooks-url", (event) => {
+                    chrome.tabs.create({url: getSearchUrl().https});
+                });
+            }
+            return false;
+        }
 
         if (!_globalTimer) {
             _globalTimer = window.setInterval(() => {
@@ -1325,54 +1344,47 @@ let Popup = (function() {
 
         $("#revenue_option").val(_revenueOption);
         
-                $(document)
-                .on("keypress", "#login-email", (event) => {
-                    if (event.which == 13 || event.keyCode == 13) {
-                        if (event.target.value.trim() !== "") {
-                            $("#login-password").focus();
-                        }
-                    }
-                })
-                .on("keypress", "#login-password", (event) => {
-                    if (event.which == 13 || event.keyCode == 13) {
-                        if ($("#login-email").val().trim() !== "" && $("#login-password").val().trim() != "") {
-                            $("#login-submit").click();
-                        }
-                    }
-                })
-                .on("click", "#untrack-all", (event) => {
-                    event.preventDefault();
-        
-                    let $buttons = $("#tracking-products-table .untrack-product");
-                    for (let i = 0; i < $buttons.length; i ++) {
-                        $buttons.eq(i).click();
-                    }
-                });
+        $(document)
+        .on("keypress", "#login-email", (event) => {
+            if (event.which == 13 || event.keyCode == 13) {
+                if (event.target.value.trim() !== "") {
+                    $("#login-password").focus();
+                }
+            }
+        })
+        .on("keypress", "#login-password", (event) => {
+            if (event.which == 13 || event.keyCode == 13) {
+                if ($("#login-email").val().trim() !== "" && $("#login-password").val().trim() != "") {
+                    $("#login-submit").click();
+                }
+            }
+        })
+        .on("click", "#untrack-all", (event) => {
+            event.preventDefault();
 
-        if (!params) {
+            let $buttons = $("#tracking-products-table .untrack-product");
+            for (let i = 0; i < $buttons.length; i ++) {
+                $buttons.eq(i).click();
+            }
+        });
+
+        _curTabId = tabId;
+        _mode = params.mode;
+        _selectedProduct = params.product;
+        $_domain.val(params.domain);
+        $_category.val(params.category);
+
+        _background.set({
+            domain: params.domain,
+            category: params.category
+        });
+
+        if (!isAuthorized()) {
             goTo("login");
         } else {
-            _curTabId = tabId;
-            _mode = params.mode;
+            $(".user-name").text(userInfo.name);
         
-
-            if (JSON.parse(localStorage._token || "null")) {
-                let userInfo = JSON.parse(localStorage._user);
-
-                $(".user-name").text(userInfo.name);
-            }
-
-        
-
-            $_domain.val(params.domain);
-            $_category.val(params.category);
-
-            _background.set({
-                domain: params.domain,
-                category: params.category
-            });
             if (params.mode == "individual") {
-                _selectedProduct = params.product;
                 _background.updateSamples((samples) => {
                     _selectedProduct.estSale = parseInt(_background.estimation(_selectedProduct.bsr));
                     renderTrackForm(_selectedProduct);
@@ -1386,7 +1398,7 @@ let Popup = (function() {
             } else if (params.mode == "list") {
                 goTo("results");
             } else if (!params.layout) {
-                goTo();
+                goTo("incorrect-layout");
             }
         }
     };
@@ -1430,7 +1442,16 @@ let Popup = (function() {
                 chrome.tabs.create({url: Popup.searchURL().https});
             }
         } else {
-            Popup.init(tabs[0].id);
+            if (isCorrectUrl(tabs[0].url)) {
+                chrome.tabs.sendMessage(tabs[0].id, {
+                    from: "popup", 
+                    action: "get_data"
+                }, (response) => {
+                    Popup.init(tabs[0].id, response);
+                });
+            } else {
+                Popup.init(tabs[0].id);
+            }
         }
     });
 })(window, $);
