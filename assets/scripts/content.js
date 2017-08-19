@@ -46,7 +46,7 @@ let ContentScript = (function() {
 			} else if (path.match(/(\/ref=zg_bs_books_\d+)|(\/ref=tmm_pap_swatch_\d+)|(\/ref=mt_paperback)/g)) {
 				category = "Books";
 				mode = "individual";
-			} else if (path.match(/(\/ref=zg_bs_\d+)|(\/ref=mt_kindle\d+)||(\/ref=tmm_kin_swatch_\d+)/g)) {
+			} else if (path.match(/(\/ref=zg_bs_\d+)|(\/ref=mt_kindle\d+)|(\/ref=tmm_kin_swatch_\d+)/g)) {
 				category = "eBooks";
 				mode = "individual";
 			} else {
@@ -68,7 +68,6 @@ let ContentScript = (function() {
 					case "popup":
 						if (request.action == "get_data") {
 							sendResponse({
-								started: _started,
 								layout: false
 							});
 						}

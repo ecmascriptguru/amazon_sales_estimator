@@ -3,6 +3,7 @@
 let Popup = (function() {
     let _steps = [
             "results",
+            "incorrect-layout",
             "niche-hunters",
             "tracking-products",
             "track",
@@ -743,7 +744,7 @@ let Popup = (function() {
         _steps.forEach(function(val) {
             if (step == val) {
                 $("#" + val).show();
-                if (["track", "tracking-products", "niche-hunters", "renew"].indexOf(step) == -1) {
+                if (["track", "tracking-products", "niche-hunters", "renew", "incorrect-layout"].indexOf(step) == -1) {
                     _curStep = step;
                     _background.step(step);
                 }
@@ -773,6 +774,13 @@ let Popup = (function() {
                 $(".mode-2").hide();
                 $(".mode-4").hide();
                 $(".mode-1").show();
+                break;
+
+            case "incorrect-layout":
+                $(".mode-3").hide();
+                $(".mode-2").hide();
+                $(".mode-4").hide();
+                $(".mode-1").hide();
                 break;
 
             case "results":
@@ -965,6 +973,9 @@ let Popup = (function() {
             _background.logout(() => {
                 goTo("login");
             });
+        })
+        .on("click", "#open-eBooks-url", (event) => {
+            chrome.tabs.create({url: getSearchUrl().https});
         })
         .on("click", "a.main-nav-link", (event) => {
             event.preventDefault();
@@ -1273,6 +1284,13 @@ let Popup = (function() {
      * Initializer of this object. In this method, periodic bot to refresh table will be initialized.
      */
     const init = function(tabId, params) {
+        if (!params.layout) {
+            goTo("incorrect-layout");
+            $(document).on("click", "#open-eBooks-url", (event) => {
+                chrome.tabs.create({url: getSearchUrl().https});
+            })
+            return false;
+        }
         if (_background.get().domain == "amazon.com.au") {
             $("#category").children("option.category-books").remove();
             _background.set({
