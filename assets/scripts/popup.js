@@ -1284,7 +1284,7 @@ let Popup = (function() {
      * Initializer of this object. In this method, periodic bot to refresh table will be initialized.
      */
     const init = function(tabId, params) {
-        if (!params.layout) {
+        if (!params || !params.layout) {
             goTo("incorrect-layout");
             $(document).on("click", "#open-eBooks-url", (event) => {
                 chrome.tabs.create({url: getSearchUrl().https});
