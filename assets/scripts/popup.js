@@ -832,6 +832,7 @@ let Popup = (function() {
                     }
                 });
             } else if (event.target.getAttribute('data-action') === "login") {
+                event.preventDefault();
                 _background.login($("#login-email").val(), $("#login-password").val(), (response) => {
                     if (response.status) {
                         if (response.user.membership_tier === "e") {
@@ -972,6 +973,7 @@ let Popup = (function() {
             });
         })
         .on("click", "#open-eBooks-url", (event) => {
+            event.preventDefault();
             chrome.tabs.create({url: getSearchUrl().https});
         })
         .on("click", "a.main-nav-link", (event) => {
@@ -1324,9 +1326,6 @@ let Popup = (function() {
                 })
             } else {
                 goTo("incorrect-layout");
-                $(document).on("click", "#open-eBooks-url", (event) => {
-                    chrome.tabs.create({url: getSearchUrl().https});
-                });
             }
             return false;
         }
