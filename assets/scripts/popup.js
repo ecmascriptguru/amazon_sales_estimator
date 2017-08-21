@@ -135,10 +135,10 @@ let Popup = (function() {
                 return obj[colName];
 
             case "monthly_rev":
-                return Number(parseInt(_background.estimation(obj.bsr) * obj.price));
+                return Number(Math.round(_background.estimation(obj.bsr) * obj.price));
 
             case "estSale":
-                return Number(parseInt(_background.estimation(obj.bsr)));
+                return Number(Math.round(_background.estimation(obj.bsr)));
 
             default:
                 return 1;
@@ -533,8 +533,8 @@ let Popup = (function() {
             let lastHistory = response.product.histories[response.product.histories.length - 1];
             let first = response.histories[0].updated_at;
             let tmp = parseInt((new Date() - new Date(first)) / (24 * 3600 * 1000));
-            $avgDailyRevenue.text(lastHistory.currency + Number(parseInt(dailyRevenueSum / daysTracking)).toLocaleString());
-            $("#product-monthly_revenue").text("#" + Number(parseInt(dailyRevenueSum / daysTracking * 30).toLocaleString()));
+            $avgDailyRevenue.text(lastHistory.currency + Number(Math.round(dailyRevenueSum / daysTracking)).toLocaleString());
+            $("#product-monthly_revenue").text("#" + Number(Math.round(dailyRevenueSum / daysTracking * 30).toLocaleString()));
             $(".footer-tracking-days").text(tmp);
             $(".footer-avg-bsr").text("#" + Number(Math.round(avgBSR / daysTracking)).toLocaleString());
 
@@ -622,21 +622,6 @@ let Popup = (function() {
 
     const downloadProduct = (p) => {
         downloadProductsToCSV([p]);
-        // const toLine = arr => arr.map(x => `"${(x + "").replace(/"/g, '""')}"`).join(",");
-        // let category = $_category.val();
-
-        // let data = [
-        //     toLine([ "BSR", Number(p.bsr).toLocaleString() ]),
-        //     toLine([ "Title", p.title ]),
-        //     toLine([ "Pages", p.pages ]),
-        //     toLine([ "Price", p.currency + p.price ]),
-        //     toLine([ "Reviews", Number(p.reviews).toLocaleString() ]),
-        //     toLine([ "Est. Sales", Number(parseInt(_background.estimation(p.bsr))).toLocaleString() ]),
-        //     toLine([ "Est. Revenue", p.currency + Number(parseInt(_background.estimation(p.bsr) * p.price)).toLocaleString() ]),
-        //     toLine([ "URL", p.url ])
-        // ]
-
-        // downloadPlaintext(data.join("\n"), `${category}-detail-${new Date().toISOString()}.csv`)
     }
 
     /**
