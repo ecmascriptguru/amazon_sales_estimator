@@ -510,7 +510,6 @@ let Popup = (function() {
      * @return {void}
      */
     const drawChart = (productID, product) => {
-        product.monthly_rev = parseInt(_background.estimation(product.bsr));
         _background.histories(productID, product, (response) => {
             let revenueData = [];
             let bsrData = [];

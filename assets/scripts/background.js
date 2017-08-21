@@ -208,7 +208,7 @@ let Background = (() => {
             }
         }
         
-        return _estimation;
+        return Math.round(_estimation);
 	}
 	
 	/**
@@ -319,6 +319,7 @@ let Background = (() => {
 	 * @return {void}
 	 */
 	const getHistories = (id, product, success, failure) => {
+		product.monthly_rev = Math.round(parseFloat(product.price) * calculate(parseInt(product.bsr)));
 		_restAPI.histories(id, product, success, failure);
 	}
 
@@ -331,6 +332,7 @@ let Background = (() => {
 	 */
 	const trackProduct = (product, success, failure) => {
 		// product.est = calculate(product.bsr);
+		product.monthly_rev = Math.round(parseFloat(product.price) + calculate(parseint(product.bsr)));
 		_restAPI.track(_data.domain, _data.category, product, (response) => {
 			if (response.status) {
 				if (typeof success === "function") {

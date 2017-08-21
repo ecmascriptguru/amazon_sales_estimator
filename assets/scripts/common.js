@@ -114,7 +114,7 @@ let restAPI = (function(window, jQuery) {
 		product.category = category;
 		product.token = JSON.parse(localStorage._token);
 		product.est = product.estSale;
-		product.monthly_rev = parseInt(parseFloat(product.price) * product.est);
+		product.monthly_rev = Math.round(parseFloat(product.price) * product.est);
 
 		sendRequest(_v1ApiBaseUrl + "items/new", product, success, failure);
 	}
@@ -173,15 +173,6 @@ let restAPI = (function(window, jQuery) {
 			token: JSON.parse(localStorage._token),
 		}
 		sendRequest(_v1ApiBaseUrl + "items", params, success, failure);
-	}
-
-	const findTrackingProduct = (productId, product, success, failure) => {
-		let params = {
-			token: JSON.parse(localStorage._token),
-			id: productId
-		}
-
-		sendRequest(_v1ApiBaseUrl + "items/get", params, success, failure);
 	}
 
 	/**
