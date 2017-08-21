@@ -536,7 +536,7 @@ let Popup = (function() {
             $avgDailyRevenue.text(lastHistory.currency + Number(parseInt(dailyRevenueSum / daysTracking)).toLocaleString());
             $("#product-monthly_revenue").text("#" + Number(parseInt(dailyRevenueSum / daysTracking * 30).toLocaleString()));
             $(".footer-tracking-days").text(tmp);
-            $(".footer-avg-bsr").text("#" + Number(parseInt(avgBSR / daysTracking)).toLocaleString());
+            $(".footer-avg-bsr").text("#" + Number(Math.round(avgBSR / daysTracking)).toLocaleString());
 
             Highcharts.chart('graph-container', {
                 chart: {
