@@ -33,7 +33,8 @@
                 .footer .footer-center-socials.mode-2 .social-icons-container {
                     margin-left: 60px;}
         .footer .statistics-container,
-        .footer .niche-statistics-container {
+        .footer .niche-statistics-container,
+        .tracking-titles-statistics-container {
             height: 70px;
             margin-left: 70px;
             width: 310px;
@@ -51,7 +52,9 @@
             .footer .statistics-container h4,
             .footer .statistics-container h5,
             .footer .niche-statistics-container h4,
-            .footer .niche-statistics-container h5  {
+            .footer .niche-statistics-container h5,
+            .tracking-titles-statistics-container h4,
+            .tracking-titles-statistics-container h5 {
                 text-align: center;}
         .footer .mode-1 .social-icons-container {
             margin-left: 215px;}

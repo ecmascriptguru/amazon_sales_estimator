@@ -758,6 +758,7 @@ let Popup = (function() {
                 $(".mode-3").hide();
                 $(".mode-2").hide();
                 $(".mode-4").hide();
+                $(".mode-5").hide();
                 $(".mode-1").show();
                 break;
 
@@ -766,12 +767,22 @@ let Popup = (function() {
                 $(".mode-2").hide();
                 $(".mode-4").hide();
                 $(".mode-1").hide();
+                $(".mode-5").hide();
+                break;
+
+            case "tracking-products":
+                $(".mode-3").hide();
+                $(".mode-2").hide();
+                $(".mode-4").hide();
+                $(".mode-1").hide();
+                $(".mode-5").show();
                 break;
 
             case "results":
                 $(".mode-3").hide();
                 $(".mode-1").hide();
                 $(".mode-4").hide();
+                $(".mode-5").hide();
                 $(".mode-2").show();
                 if (_background.started() && _background.get().products.length < 21) {
                     showLoading();
@@ -782,6 +793,7 @@ let Popup = (function() {
                 $(".mode-3").hide();
                 $(".mode-1").hide();
                 $(".mode-2").hide();
+                $(".mode-5").hide();
                 $(".mode-4").show();
                 break;
 
@@ -789,6 +801,7 @@ let Popup = (function() {
                 $(".mode-1").hide();
                 $(".mode-2").hide();
                 $(".mode-4").hide();
+                $(".mode-5").hide();
                 $(".mode-3").show();
                 break;
         }
