@@ -513,6 +513,8 @@ let Popup = (function() {
         _background.histories(productID, product, (response) => {
             let revenueData = [];
             let bsrData = [];
+            let reviewsData = [];
+            let pricesData = [];
             let xAxisData = [];
             let graphContainer = document.getElementById("graph-container");
             let daysTracking = 0;
@@ -521,12 +523,14 @@ let Popup = (function() {
             let avgBSR = 0;
 
             for (let i = 0; i < response.histories.length; i ++) {
-                revenueData.push([response.histories[i].updated_at, parseInt(response.histories[i].monthly_rev/* / 30*/)]);
+                revenueData.push([response.histories[i].updated_at, parseInt(response.histories[i].monthly_rev / 1000)]);
                 bsrData.push([response.histories[i].updated_at, parseInt(response.histories[i].bsr)]);
                 xAxisData.push(new Date(response.histories[i].updated_at).toLocaleDateString());
                 daysTracking++;
                 dailyRevenueSum += parseInt(response.histories[i].monthly_rev / 30);
                 avgBSR += parseInt(response.histories[i].bsr);
+                reviewsData.push(parseInt(response.histories[i].reviews | 0))
+                pricesData.push(parseFloat(response.histories[i].price || 0.0))
             }
 
             let lastHistory = response.product.histories[response.product.histories.length - 1];
@@ -539,36 +543,97 @@ let Popup = (function() {
 
             Highcharts.chart('graph-container', {
                 chart: {
-                    zoomType: 'x'
+                    zoomType: 'xy'
                 },
                 xAxis: {
                     type: 'datetime',
+                    crosshair: true,
                     dateTimeLabelFormats: {
                         day: '%b %e'    //ex- 01 Jan 2016
                     },
                     categories: xAxisData
                 },
+                subtitle: {
+                    text: 'Source: privatelabelmastery.com'
+                },
                 title: {
                     text: "Monthly Revenue Chart"
                 },
-                yAxis: {
-                    title: "Monthly Revenue & BSR"
+                yAxis: [
+                    {
+                        labels: {
+                            format: '${value}K',
+                            style: {
+                                color: Highcharts.getOptions().colors[0]
+                            }
+                        },
+                        title: {
+                            text: 'Monthly Revenue',
+                            style: {
+                                color: Highcharts.getOptions().colors[0]
+                            }
+                        },
+                        // opposite: true
+                    },
+                    {
+                        labels: {
+                            format: '#{value}',
+                            style: {
+                                color: Highcharts.getOptions().colors[1]
+                            }
+                        },
+                        title: {
+                            text: 'BSR',
+                            style: {
+                                color: Highcharts.getOptions().colors[1]
+                            }
+                        },
+                        opposite: true
+                    },
+                ],
+                tooltip: {
+                    shared: true
                 },
                 series: [
                     {
                         name: "Revenue",
                         data: revenueData,
+                        type: 'spline',
                         tooltip: {
-                            valuePrefix: "$"
-                        }
+                            valuePrefix: "$",
+                            valueSuffix: ' K'
+                        },
+                        yAxis: 0,
+                        dashStyle: 'shortdot',
+                        marker: {
+                            enabled: false
+                        },
                     },
                     {
                         name: "BSR",
+                        // type: 'column',
                         data: bsrData,
                         tooltip: {
                             valuePrefix: "#"
-                        }
-                    }
+                        },
+                        yAxis: 1,
+                    },
+                    {
+                        name: "Reviews",
+                        data: reviewsData,
+                        tooltip: {
+                            valuePrefix: ""
+                        },
+                        yAxis: 1,
+                    },
+                    {
+                        name: "Price",
+                        data: pricesData,
+                        tooltip: {
+                            valuePrefix: "$"
+                        },
+                        yAxis: 1,
+                    },
                 ],
                     
 
