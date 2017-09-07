@@ -4,7 +4,11 @@
     "description": "Kindle Niche Hunter."
   },
   "appDescription": {
-    "message": "Kindle Niche Hunter",
+    "message": "Kindle Niche Hunter (KNH) allows indie publishers to find profitable Kindle eBooks and Books niches on Amazon.",
     "description": "Kindle Niche Hunter"
+  },
+  "appShortName": {
+    "message": "KNH Tool",
+    "description": "KNH Tool"
   }
 }
