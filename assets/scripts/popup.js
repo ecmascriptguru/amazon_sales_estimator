@@ -523,7 +523,7 @@ let Popup = (function() {
             let avgBSR = 0;
 
             for (let i = 0; i < response.histories.length; i ++) {
-                revenueData.push([response.histories[i].updated_at, parseInt(response.histories[i].monthly_rev / 1000)]);
+                revenueData.push([response.histories[i].updated_at, parseInt(response.histories[i].monthly_rev/* / 1000*/)]);
                 bsrData.push([response.histories[i].updated_at, parseInt(response.histories[i].bsr)]);
                 xAxisData.push(new Date(response.histories[i].updated_at).toLocaleDateString());
                 daysTracking++;
@@ -532,6 +532,13 @@ let Popup = (function() {
                 reviewsData.push(parseInt(response.histories[i].reviews | 0))
                 pricesData.push(parseFloat(response.histories[i].price || 0.0))
             }
+
+            let today = new Date().toLocaleString("en-US");
+            xAxisData.push(today);
+            revenueData.push([today, response.histories[response.histories.length - 1].monthly_rev])
+            bsrData.push([today, response.histories[response.histories.length - 1].bsr])
+            reviewsData.push([today, response.histories[response.histories.length - 1].reviews])
+            pricesData.push([today, response.histories[response.histories.length - 1].price])
 
             let lastHistory = response.product.histories[response.product.histories.length - 1];
             let first = response.histories[0].updated_at;
@@ -562,7 +569,7 @@ let Popup = (function() {
                 yAxis: [
                     {
                         labels: {
-                            format: '${value}K',
+                            format: '${value}',
                             style: {
                                 color: Highcharts.getOptions().colors[0]
                             }
@@ -601,7 +608,7 @@ let Popup = (function() {
                         type: 'spline',
                         tooltip: {
                             valuePrefix: "$",
-                            valueSuffix: ' K'
+                            valueSuffix: ' '
                         },
                         yAxis: 0,
                         dashStyle: 'shortdot',
@@ -967,7 +974,7 @@ let Popup = (function() {
                         event.target.setAttribute("data-id", response.product.id);
                         event.target.textContent = "Untrack this title";
                         event.target.className = "btn btn-danger";
-                        drawChart(response.product.id);
+                        drawChart(response.product.id, _selectedProduct);
                     }, (response) => {
                         //  To do in failure.
                         if (response.status == false && response.message == "Your token was expired.") {
