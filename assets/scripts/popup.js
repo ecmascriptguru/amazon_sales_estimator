@@ -534,7 +534,7 @@ let Popup = (function() {
             }
 
             let today = new Date().toLocaleString("en-US");
-            xAxisData.push(today);
+            xAxisData.push((new Date()).toLocaleDateString());
             revenueData.push([today, response.histories[response.histories.length - 1].monthly_rev])
             bsrData.push([today, response.histories[response.histories.length - 1].bsr])
             reviewsData.push([today, response.histories[response.histories.length - 1].reviews])
