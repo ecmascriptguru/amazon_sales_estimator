@@ -713,7 +713,7 @@ let Popup = (function() {
             $pages = $("#product-pages"),
             $asin = $("#product-asin");
 
-        $pages.text(product.pages);
+        $pages.text(product.pages || "-");
 
         if (flag) {
             let lastHistory = product.histories[product.histories.length - 1];
@@ -721,7 +721,7 @@ let Popup = (function() {
             product.reviews = lastHistory.reviews;
             product.bsr = lastHistory.bsr;
             product.currency = lastHistory.currency;
-            $pages.text(lastHistory.pages);
+            $pages.text(lastHistory.pages || "-");
         }
         
         $img[0].src = product.img;
