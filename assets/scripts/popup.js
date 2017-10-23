@@ -1510,7 +1510,7 @@ let Popup = (function() {
         }
         return true;
     }
-    chrome.tabs.query({active: true}, (tabs) => {
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
         
         if (JSON.parse(localStorage._token || "null") && JSON.parse(localStorage._user || "{}").membership_tier && JSON.parse(localStorage._user || "{}").membership_tier != "e") {
             if (isCorrectUrl(tabs[0].url)) {
