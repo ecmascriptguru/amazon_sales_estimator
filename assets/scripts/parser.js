@@ -84,15 +84,28 @@ let Parser = (() => {
         let pattern = regPatterns[_domain];
         let $page = $(text);
         let title = ($page.find("#ebooksProductTitle")[0] || $page.find("#productTitle")[0]).textContent;
-        let imgTag = ($page.find("#mainImageContainer")[0] || $page.find("#main-image-container")[0] || $page.find("#ebooks-img-canvas")[0]).querySelector("img");
+
+        let imgTag = $page.find("#mainImageContainer img")[0] || 
+            $page.find("#main-image-container img")[0] || 
+            $page.find("#ebooks-img-canvas img")[0] ||
+            $page.find(".image-wrapper img")[0];
         let img = null;
+
+        if (!imgTag) {
+            console.log("Unknown Main Image Pattern found.")
+            debugger;
+        }
         try {
-            let tmpString = imgTag.getAttribute("data-a-dynamic-image");
-            let tmpJSON = JSON.parse(tmpString);
-            for (let p in tmpJSON) {
-                img = p;
-                break;
-            }
+            if (imgTag.hasAttribute("data-a-dynamic-image") ) {
+                let tmpString = imgTag.getAttribute("data-a-dynamic-image");
+                let tmpJSON = JSON.parse(tmpString);
+                for (let p in tmpJSON) {
+                    img = p;
+                    break;
+                }
+            } else {
+                img = imgTag.src;
+            }   
         } catch(e) {
             console.log(e);
             img = imgTag.src;
